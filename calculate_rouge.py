@@ -4,12 +4,11 @@
 #system output is one sentence per line
 #correct output can be multiple sentences per line (if multiple references setting), splitted by tab
 
-
-import sys
-import collections
-import numpy as np
-from sumeval.metrics.rouge import RougeCalculator
 import argparse
+
+import numpy as np
+
+from sumeval.metrics.rouge import RougeCalculator
 
 
 def read_file(filename):
@@ -36,8 +35,8 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-s', '--system', dest='system_output',
-        required=True, help='specify the system output file name')
+                        required=True, help='specify the system output file name')
     parser.add_argument('-r', '--reference', dest='reference',
-        required=True, help='specify the reference file name')
+                        required=True, help='specify the reference file name')
     args = parser.parse_args()
     main(args)
