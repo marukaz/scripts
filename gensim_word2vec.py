@@ -1,6 +1,5 @@
 import argparse
 import logging
-import sys
 
 from gensim.models import word2vec
 
@@ -9,14 +8,13 @@ logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=lo
 
 
 def main(args):
-    sentences = word2vec.LineSentence(args.loadfile)
-    model = word2vec.Word2Vec(sentences)
-    model.save(args.savefile)
+    model = word2vec.Word2Vec(corpus_file=args.load, sg=1, min_count=0, workers=8)
+    model.wv.save_word2vec_format(args.save)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('loadfile')
-    parser.add_argument('savefile', default='word2vec.model')
+    parser.add_argument('-l', '--load')
+    parser.add_argument('-s', '--save', default='word2vec.model')
     args = parser.parse_args()
     main(args)
