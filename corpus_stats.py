@@ -2,7 +2,7 @@ import argparse
 
 
 def main(args):
-    with open(args.beam_file) as f:
+    with open(args.file) as f:
         sum_len = 0
         for i, line in enumerate(f, 1):
             sum_len += len(line)
