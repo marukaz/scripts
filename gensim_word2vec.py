@@ -8,6 +8,8 @@ logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=lo
 
 
 def main(args):
+    # TODO: consider the warning below
+    # WARNING : under 10 jobs per worker: consider setting a smaller `batch_words' for smoother alpha decay
     model = word2vec.Word2Vec(corpus_file=args.load, sg=1, min_count=0, workers=8)
     model.wv.save_word2vec_format(args.save)
 
