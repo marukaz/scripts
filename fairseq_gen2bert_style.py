@@ -2,7 +2,7 @@ import argparse
 
 
 def main(args):
-    out_filename = '.'.join(args.filename.split('.')[:-1].append('tsv'))
+    out_filename = '.'.join(args.filename.split('.')[:-1] + ['tsv'])
     with open(args.filename) as rf, open(out_filename, 'w') as wf:
         for line in rf:
             if line.startswith('S'):
