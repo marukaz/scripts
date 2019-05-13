@@ -7,9 +7,16 @@ def main(args):
         for line in rf:
             if line.startswith('S'):
                 splits = line.rstrip().split('\t')
-                wf.write(f'{splits[0][2:]}\t{splits[-1]}\t')
+                snt = ''.join(splits[-1].split(' '))
+                if snt.startswith('▁'):
+                    snt = snt[1:]
+                wf.write(f'{splits[0][2:]}\t{snt}\t')
             elif line.startswith('H'):
-                wf.write(line.split('\t')[-1])
+                splits = line.split('\t')
+                snt = ''.join(splits[-1].split(' '))
+                if snt.startswith('▁'):
+                    snt = snt[1:]
+                wf.write(snt)
 
 
 if __name__ == "__main__":
