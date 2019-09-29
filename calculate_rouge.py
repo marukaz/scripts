@@ -18,20 +18,19 @@ def concat_tokens(tokens):
 def read_file(filename, do_concat):
     with open(filename) as f:
         if do_concat:
-             lines= [concat_tokens(line.strip()) for line in f]
+            lines = [concat_tokens(line.strip()) for line in f]
         else:
             lines = [line.strip() for line in f]
     if '\t' in lines[0]:
-        lines = [[subline.strip() for subline in line.split('\t')]
-                for line in lines]
+        lines = [[subline.strip() for subline in line.split('\t')] for line in lines]
     return lines
 
 
 def main(args):
-    system_out = read_file(args.system_out, args.concat_tokens)
+    system_out = read_file(args.system_output, args.concat_tokens)
     reference_list = read_file(args.reference, args.concat_tokens)
-    rouge4one = RougeCalculator(stopwords=True, lang="ja")
-    rouge4other = RougeCalculator(stopwords=False, lang="ja")
+    rouge4one = RougeCalculator(stopwords=True, lang=args.lang)
+    rouge4other = RougeCalculator(stopwords=False, lang=args.lang)
     rougeone_list = []
     rougetwo_list = []
     rougel_list = []
@@ -50,6 +49,7 @@ if __name__ == "__main__":
                         required=True, help='specify the system output file name')
     parser.add_argument('-r', '--reference', dest='reference',
                         required=True, help='specify the reference file name')
-    parser.add_argument('-c', '--concat-tokens', action='store true')
+    parser.add_argument('-l', '--lang', default='ja')
+    parser.add_argument('-c', '--concat-tokens', action='store_true')
     args = parser.parse_args()
     main(args)
