@@ -6,13 +6,13 @@ def main(args):
         for line in rf:
             if line.startswith('T'):
                 snt = ''.join(line.split('\t')[-1].split(' '))
-                if snt.startswith('▁'):
-                    snt = snt[1:]
+                if '▁' in snt:
+                    snt = snt.replace('_', ' ')
                 wfr.write(snt)
             elif line.startswith('H'):
                 snt = ''.join(line.split('\t')[-1].split(' '))
-                if snt.startswith('▁'):
-                    snt = snt[1:]
+                if '▁' in snt:
+                    snt = snt.replace('_', ' ')
                 wfg.write(snt)
 
 
