@@ -7,12 +7,12 @@ def main(args):
             if line.startswith('T'):
                 snt = ''.join(line.split('\t')[-1].split(' '))
                 if '▁' in snt:
-                    snt = snt.replace('_', ' ')
+                    snt = snt.replace('▁', ' ')
                 wfr.write(snt)
             elif line.startswith('H'):
                 snt = ''.join(line.split('\t')[-1].split(' '))
                 if '▁' in snt:
-                    snt = snt.replace('_', ' ')
+                    snt = snt.replace('▁', ' ')
                 wfg.write(snt)
 
 
