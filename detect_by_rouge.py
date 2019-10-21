@@ -35,6 +35,7 @@ def main(args):
             if score < args.threshold:
                 detect_num += 1
                 print(l1s, '=====> '+l1, l2s, '=====> '+l2)
+    print()
     print('lines: ', line_num)
     print('detect: ', detect_num)
     print(f'detected percent: {f:.2%}')
