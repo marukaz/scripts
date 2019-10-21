@@ -38,7 +38,7 @@ def main(args):
     print()
     print('lines: ', line_num)
     print('detect: ', detect_num)
-    print(f'detected percent: {f:.2%}')
+    print(f'detected percent: {detect_num/line_num:.2%}')
 
 
 if __name__ == "__main__":
