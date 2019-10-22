@@ -13,7 +13,7 @@ from sumeval.metrics.rouge import RougeCalculator
 
 def detokenize(line):
     line = line.replace(' ', '')
-    line = line.replace('▁', '')
+    line = line.replace('▁', ' ')
     return line
 
 
