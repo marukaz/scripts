@@ -11,14 +11,16 @@ import numpy as np
 from sumeval.metrics.rouge import RougeCalculator
 
 
-def concat_tokens(tokens):
-    return ''.join(tokens.split(' '))
+def detokenize(line):
+    line = line.replace(' ', '')
+    line = line.replace('▁', '')
+    return line
 
 
 def read_file(filename, do_concat):
     with open(filename) as f:
         if do_concat:
-            lines = [concat_tokens(line.strip()) for line in f]
+            lines = [detokenize(line.strip()) for line in f]
         else:
             lines = [line.strip() for line in f]
     if '\t' in lines[0]:
@@ -50,6 +52,6 @@ if __name__ == "__main__":
     parser.add_argument('-r', '--reference', dest='reference',
                         required=True, help='specify the reference file name')
     parser.add_argument('-l', '--lang', default='ja')
-    parser.add_argument('-c', '--concat-tokens', action='store_true')
+    parser.add_argument('-d', '--detokenize', action='store_true')
     args = parser.parse_args()
     main(args)
