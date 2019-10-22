@@ -17,9 +17,9 @@ def detokenize(line):
     return line
 
 
-def read_file(filename, do_concat):
+def read_file(filename, do_detokenize):
     with open(filename) as f:
-        if do_concat:
+        if do_detokenize:
             lines = [detokenize(line.strip()) for line in f]
         else:
             lines = [line.strip() for line in f]
@@ -29,8 +29,8 @@ def read_file(filename, do_concat):
 
 
 def main(args):
-    system_out = read_file(args.system_output, args.concat_tokens)
-    reference_list = read_file(args.reference, args.concat_tokens)
+    system_out = read_file(args.system_output, args.detokenize)
+    reference_list = read_file(args.reference, args.detokenize)
     rouge4one = RougeCalculator(stopwords=True, lang=args.lang)
     rouge4other = RougeCalculator(stopwords=False, lang=args.lang)
     rougeone_list = []
