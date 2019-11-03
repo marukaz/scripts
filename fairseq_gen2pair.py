@@ -14,10 +14,10 @@ def main(args):
     with open(args.filename) as f:
         for line in f:
             if line.startswith('T'):
-                id_, snt = extract(line)
+                id_, snt = extract(line.strip())
                 refernce[id_] = snt
             elif line.startswith('H'):
-                id_, snt = extract(line)
+                id_, snt = extract(line.strip())
                 generate[id_] = snt
     with open('reference.txt', 'w') as wfr, open('generation.txt', 'w') as wfg:
         ref_items = sorted(refernce.items())
