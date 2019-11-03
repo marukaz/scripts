@@ -22,18 +22,31 @@ def main(args):
 
     line_num = 0
     detect_num = 0
-    with open(args.path1) as f1, open(args.path1src) as f1s, open(args.path2) as f2, open(args.path2src) as f2s:
-        for l1, l1s, l2, l2s in zip(f1, f1s, f2, f2s):
+    frs = open(args.reference_source) if args.reference_source else None
+    fss = open(args.system_source) if args.system_source else None
+    with open(args.reference) as fr, open(args.system) as fs:
+        for lr, ls in zip(fr, fs):
+            if frs:
+                ref_source = frs.readline()
+            if fss:
+                sys_source = fss.readline()
             line_num += 1
             if args.detokenize:
-                l1s = detokenize(l1s)
-                l1 = detokenize(l1)
-                l2s = detokenize(l2s)
-                l2 = detokenize(l2)
-            score = rouge(summary=l1, references=l2)
+                lr = detokenize(lr)
+                ls = detokenize(ls)
+            score = rouge(summary=ls, references=lr)
             if score < args.threshold:
                 detect_num += 1
-                print(l1s, '=====> '+l1, l2s, '=====> '+l2)
+                if frs:
+                    r_out = ref_source + '=====> ' + lr
+                else:
+                    r_out = 'reference:\n' + '=====> ' + lr
+                if fss:
+                    s_out = sys_source + '=====> ' + ls
+                else:
+                    s_out = 'system:\n' + '=====> ' + ls
+                print(r_out.strip())
+                print(s_out.strip())
     print()
     print('lines: ', line_num)
     print('detect: ', detect_num)
@@ -42,11 +55,11 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('path1src')
-    parser.add_argument('path1')
-    parser.add_argument('path2src')
-    parser.add_argument('path2')
-    parser.add_argument('-r', '--rouge', choices=['1', '2', 'l'], default='1')
+    parser.add_argument('reference')
+    parser.add_argument('system')
+    parser.add_argument('-rs', '--reference-source')
+    parser.add_argument('-ss', '--system-source')
+    parser.add_argument('--rouge', choices=['1', '2', 'l'], default='1')
     parser.add_argument('-t', '--threshold', type=float, default=0.8, help='Detect if the rouge score is lower than this threshold.')
     parser.add_argument('-l', '--lang', default='ja')
     parser.add_argument('-d', '--detokenize', action='store_true')
