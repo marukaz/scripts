@@ -1,19 +1,29 @@
 import argparse
 
 
+def extract(line):
+    sp = line.split('\t')
+    id_ = int(sp[0][2:])
+    snt = ''.join(sp[-1].split(' '))
+    snt = snt.replace('▁', ' ')
+    return id_, snt
+
 def main(args):
-    with open(args.filename) as rf, open('reference.txt', 'w') as wfr, open('generation.txt', 'w') as wfg:
-        for line in rf:
+    generate = {}
+    refernce = {}
+    with open(args.filename) as f:
+        for line in f:
             if line.startswith('T'):
-                snt = ''.join(line.split('\t')[-1].split(' '))
-                if '▁' in snt:
-                    snt = snt.replace('▁', ' ')
-                wfr.write(snt)
+                id_, snt = extract(line)
+                refernce[id_] = snt
             elif line.startswith('H'):
-                snt = ''.join(line.split('\t')[-1].split(' '))
-                if '▁' in snt:
-                    snt = snt.replace('▁', ' ')
-                wfg.write(snt)
+                id_, snt = extract(line)
+                generate[id_] = snt
+    with open('reference.txt', 'w') as wfr, open('generation.txt', 'w') as wfg:
+        ref_items = sorted(refernce.items())
+        wfr.write('\n'.join([item[1] for item in ref_items]))
+        gen_items = sorted(generate.items())
+        wfg.write('\n'.join([item[1] for item in gen_items]))
 
 
 if __name__ == "__main__":
