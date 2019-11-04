@@ -5,14 +5,14 @@ VALID=dev;
 TEST=test;
 
 usage_exit() {
-        echo "Usage: $0 [-p PATH] [-v VALID] item ..." 1>&2
+        echo "Usage: $0 [-d DATA] [-v VALID] item ..." 1>&2
         exit 1
 }
 
 while getopts p:t:v:e:b:h OPT
 do
     case $OPT in
-        p)  PATH=$OPTARG
+        d)  DATA=$OPTARG
             ;;
         t)  TRAIN=$OPTARG
             ;;
@@ -34,5 +34,5 @@ shift $((OPTIND - 1))
 source $BASE/venvs/fairseq/bin/activate;
 
 fairseq-preprocess --source-lang src --target-lang tgt \
---trainpref $PATH/train --validpref $PATH/$VALID --testpref $PATH/test \
---destdir ${PATH}_bin --workers 32
+--trainpref $DATA/$TRAIN --validpref $DATA/$VALID --testpref $DATA/$TEST \
+--destdir ${DATA}_bin --workers 32
