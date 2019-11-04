@@ -9,7 +9,7 @@ usage_exit() {
         exit 1
 }
 
-while getopts p:t:v:e:b:h OPT
+while getopts d:t:v:e:b:h OPT
 do
     case $OPT in
         d)  DATA=$OPTARG
