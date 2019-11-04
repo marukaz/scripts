@@ -9,14 +9,14 @@ usage_exit() {
         exit 1
 }
 
-while getopts t:v:h OPT
+while getopts p:t:v:e:b:h OPT
 do
     case $OPT in
         p)  PATH=$OPTARG
             ;;
-        v)  VALID=$OPTARG
-            ;;
         t)  TRAIN=$OPTARG
+            ;;
+        v)  VALID=$OPTARG
             ;;
         e)  TEST=$OPTARG
             ;;
@@ -34,5 +34,5 @@ shift $((OPTIND - 1))
 source $BASE/venvs/fairseq/bin/activate;
 
 fairseq-preprocess --source-lang src --target-lang tgt \
---trainpref $TEXT/train --validpref $TEXT/$VALID --testpref $TEXT/test \
---destdir ${TEXT}_bin --workers 32
+--trainpref $PATH/train --validpref $PATH/$VALID --testpref $PATH/test \
+--destdir ${PATH}_bin --workers 32
