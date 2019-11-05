@@ -38,15 +38,16 @@ def main(args):
             if score < args.threshold:
                 detect_num += 1
                 if frs:
-                    r_out = ref_source + '=====> ' + lr
+                    r_out = 'reference source:\n' + ref_source + '=====> ' + lr
                 else:
-                    r_out = 'reference:\n' + '=====> ' + lr
+                    r_out = 'reference summary:\n' + '=====> ' + lr
                 if fss:
-                    s_out = sys_source + '=====> ' + ls
+                    s_out = 'system source:\n' + sys_source + '=====> ' + ls
                 else:
-                    s_out = 'system:\n' + '=====> ' + ls
+                    s_out = 'system summary:\n' + '=====> ' + ls
                 print(r_out.strip())
                 print(s_out.strip())
+                print()
     print()
     print('lines: ', line_num)
     print('detect: ', detect_num)
