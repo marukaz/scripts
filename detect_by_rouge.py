@@ -1,6 +1,7 @@
 import argparse
 import sys
 from pathlib import Path
+from tqdm import tqdm
 
 from sumeval.metrics.rouge import RougeCalculator
 
@@ -36,7 +37,7 @@ def main(args):
         sys_save = filtered_dir/sys_path.name
         sys_fo = sys_save.open('w') 
     with ref_path.open() as fr, sys_path.open() as fs:
-        for lr, ls in zip(fr, fs):
+        for lr, ls in tqdm(zip(fr, fs)):
             if frs:
                 ref_source = frs.readline()
             if fss:
