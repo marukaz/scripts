@@ -6,8 +6,8 @@ from pytorch_transformers import BertTokenizer
 
 
 def main(args):
-    path = Parh(args.path)
-    save_dir = Path(str(ref_path) +'_wp')
+    path = Path(args.path)
+    save_dir = Path(str(path.parent) +'_wp')
     save_dir.mkdir(exist_ok=True)
     save_path = save_dir/path.name
 
