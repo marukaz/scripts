@@ -1,4 +1,6 @@
 import argparse
+import sys
+from pathlib import Path
 
 from sumeval.metrics.rouge import RougeCalculator
 
@@ -22,9 +24,20 @@ def main(args):
 
     line_num = 0
     detect_num = 0
+    ref_path = Path(args.reference)
+    sys_path = Path(args.system)
     frs = open(args.reference_source) if args.reference_source else None
     fss = open(args.system_source) if args.system_source else None
-    with open(args.reference) as fr, open(args.system) as fs:
+    if args.filter_mode:
+        filtered_dir = ref_path.parent/f'filter_{args.threshold}_RG{args.rouge}'
+        filtered_dir.mkdir(exist_ok=True)
+        base, ext = ref_path.name.rsplit('.', 1)
+        ref_save = filtered_dir/'.'.join((base, 'filtered', ext))
+        ref_fo = ref_save.open('w') 
+        base, ext = sys_path.name.rsplit('.', 1)
+        sys_save = filtered_dir/'.'.join((base, 'filtered', ext))
+        sys_fo = sys_save.open('w') 
+    with ref_path.open() as fr, sys_path.open() as fs:
         for lr, ls in zip(fr, fs):
             if frs:
                 ref_source = frs.readline()
@@ -35,23 +48,30 @@ def main(args):
                 lr = detokenize(lr)
                 ls = detokenize(ls)
             score = rouge(summary=ls, references=lr)
-            if score < args.threshold:
-                detect_num += 1
-                if frs:
-                    r_out = 'reference source:\n' + ref_source + '=====> ' + lr
-                else:
-                    r_out = 'reference summary:\n' + '=====> ' + lr
-                if fss:
-                    s_out = 'system source:\n' + sys_source + '=====> ' + ls
-                else:
-                    s_out = 'system summary:\n' + '=====> ' + ls
-                print(r_out.strip())
-                print(s_out.strip())
-                print()
-    print()
-    print('lines: ', line_num)
-    print('detect: ', detect_num)
-    print(f'detected percent: {detect_num/line_num:.2%}')
+            if args.filter_mode:
+                if score > args.threshold:
+                    ref_fo.write(lr)
+                    sys_fo.write(ls)
+            else:
+                # detect gushed examples
+                if score < args.threshold:
+                    detect_num += 1
+                    if frs:
+                        r_out = 'reference source:\n' + ref_source + '=====> ' + lr
+                    else:
+                        r_out = 'reference summary:\n' + '=====> ' + lr
+                    if fss:
+                        s_out = 'system source:\n' + sys_source + '=====> ' + ls
+                    else:
+                        s_out = 'system summary:\n' + '=====> ' + ls
+                    print(r_out.strip())
+                    print(s_out.strip())
+                    print()
+    if not args.filter_mode:
+        print()
+        print('lines: ', line_num)
+        print('detect: ', detect_num)
+        print(f'detected percent: {detect_num/line_num:.2%}')
 
 
 if __name__ == "__main__":
@@ -64,6 +84,7 @@ if __name__ == "__main__":
     parser.add_argument('-t', '--threshold', type=float, default=0.8, help='Detect if the rouge score is lower than this threshold.')
     parser.add_argument('-l', '--lang', default='ja')
     parser.add_argument('-d', '--detokenize', action='store_true')
+    parser.add_argument('-f', '--filter-mode', action='store_true')
     args = parser.parse_args()
     main(args)
 
