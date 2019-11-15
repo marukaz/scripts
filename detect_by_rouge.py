@@ -31,11 +31,9 @@ def main(args):
     if args.filter_mode:
         filtered_dir = ref_path.parent/f'filter_{args.threshold}_RG{args.rouge}'
         filtered_dir.mkdir(exist_ok=True)
-        base, ext = ref_path.name.rsplit('.', 1)
-        ref_save = filtered_dir/'.'.join((base, 'filtered', ext))
+        ref_save = filtered_dir/ref_path.name
         ref_fo = ref_save.open('w') 
-        base, ext = sys_path.name.rsplit('.', 1)
-        sys_save = filtered_dir/'.'.join((base, 'filtered', ext))
+        sys_save = filtered_dir/sys_path.name
         sys_fo = sys_save.open('w') 
     with ref_path.open() as fr, sys_path.open() as fs:
         for lr, ls in zip(fr, fs):
