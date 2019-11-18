@@ -10,17 +10,13 @@ import numpy as np
 
 from sumeval.metrics.rouge import RougeCalculator
 
-
-def detokenize(line):
-    line = line.replace(' ', '')
-    line = line.replace('▁', ' ')
-    return line
+from utils import process_bpe_symbol
 
 
-def read_file(filename, do_detokenize):
+def read_file(filename, bpe_symbol=None):
     with open(filename) as f:
-        if do_detokenize:
-            lines = [detokenize(line.strip()) for line in f]
+        if bpe_symbol is not None:
+            lines = [process_bpe_symbol(line.strip(), bpe_symbol) for line in f]
         else:
             lines = [line.strip() for line in f]
     if '\t' in lines[0]:
@@ -29,8 +25,8 @@ def read_file(filename, do_detokenize):
 
 
 def main(args):
-    system_out = read_file(args.system_output, args.detokenize)
-    reference_list = read_file(args.reference, args.detokenize)
+    system_out = read_file(args.system_output, args.remove_bpe)
+    reference_list = read_file(args.reference, args.remove_bpe)
     rouge4one = RougeCalculator(stopwords=True, lang=args.lang)
     rouge4other = RougeCalculator(stopwords=False, lang=args.lang)
     rougeone_list = []
@@ -52,6 +48,6 @@ if __name__ == "__main__":
     parser.add_argument('-r', '--reference', dest='reference',
                         required=True, help='specify the reference file name')
     parser.add_argument('-l', '--lang', default='ja')
-    parser.add_argument('-d', '--detokenize', action='store_true')
+    parser.add_argument('--remove-bpe', default=None)
     args = parser.parse_args()
     main(args)
