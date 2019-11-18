@@ -15,10 +15,7 @@ from utils import process_bpe_symbol
 
 def read_file(filename, bpe_symbol=None):
     with open(filename) as f:
-        if bpe_symbol is not None:
-            lines = [process_bpe_symbol(line.strip(), bpe_symbol) for line in f]
-        else:
-            lines = [line.strip() for line in f]
+        lines = [process_bpe_symbol(line.strip(), bpe_symbol) for line in f]
     if '\t' in lines[0]:
         lines = [[subline.strip() for subline in line.split('\t')] for line in lines]
     return lines
