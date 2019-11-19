@@ -5,11 +5,7 @@ from tqdm import tqdm
 
 from sumeval.metrics.rouge import RougeCalculator
 
-
-def detokenize(line):
-    line = line.replace(' ', '')
-    line = line.replace('▁', ' ')
-    return line
+from utils import process_bpe_symbol
 
 
 def main(args):
@@ -43,9 +39,8 @@ def main(args):
             if fss:
                 sys_source = fss.readline()
             line_num += 1
-            if args.detokenize:
-                lr = detokenize(lr)
-                ls = detokenize(ls)
+            lr = process_bpe_symbol(lr, args.remove_bpe)
+            ls = process_bpe_symbol(ls, args.remove_bpe)
             score = rouge(summary=ls, references=lr)
             if args.filter_mode:
                 if score > args.threshold:
@@ -82,7 +77,7 @@ if __name__ == "__main__":
     parser.add_argument('--rouge', choices=['1', '2', 'l'], default='1')
     parser.add_argument('-t', '--threshold', type=float, default=0.8, help='Detect if the rouge score is lower than this threshold.')
     parser.add_argument('-l', '--lang', default='ja')
-    parser.add_argument('-d', '--detokenize', action='store_true')
+    parser.add_argument('--remove-bpe', default=None)
     parser.add_argument('-f', '--filter-mode', action='store_true')
     args = parser.parse_args()
     main(args)
