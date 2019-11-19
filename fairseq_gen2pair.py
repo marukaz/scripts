@@ -4,8 +4,7 @@ import argparse
 def extract(line):
     sp = line.split('\t')
     id_ = int(sp[0][2:])
-    snt = ''.join(sp[-1].split(' '))
-    snt = snt.replace('▁', ' ')
+    snt = sp[-1]
     return id_, snt
 
 def main(args):
