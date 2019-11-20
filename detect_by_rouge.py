@@ -34,11 +34,14 @@ def main(args):
         sys_fo = sys_save.open('w') 
     with ref_path.open() as fr, sys_path.open() as fs:
         for lr, ls in tqdm(zip(fr, fs)):
+            if args.ignore_empty:
+                if len(lr) == 0:
+                    continue
+            line_num += 1
             if frs:
                 ref_source = frs.readline()
             if fss:
                 sys_source = fss.readline()
-            line_num += 1
             lr = process_bpe_symbol(lr, args.remove_bpe)
             ls = process_bpe_symbol(ls, args.remove_bpe)
             score = rouge(summary=ls, references=lr)
@@ -79,6 +82,7 @@ if __name__ == "__main__":
     parser.add_argument('-l', '--lang', default='ja')
     parser.add_argument('--remove-bpe', default=None)
     parser.add_argument('-f', '--filter-mode', action='store_true')
+    parser.add_argument('--ignore-empty', action='store_true')
     args = parser.parse_args()
     main(args)
 
