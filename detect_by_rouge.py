@@ -35,7 +35,7 @@ def main(args):
     with ref_path.open() as fr, sys_path.open() as fs:
         for lr, ls in tqdm(zip(fr, fs)):
             if args.ignore_empty:
-                if len(lr) == 0:
+                if len(lr) <= 5:
                     continue
             line_num += 1
             if frs:
