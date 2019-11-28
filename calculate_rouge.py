@@ -30,9 +30,9 @@ def main(args):
     rougetwo_list = []
     rougel_list = []
     for index, snt in enumerate(system_out):
-        rougeone_list.append(rouge4one.rouge_1(summary=snt, references=reference_list[index]))
-        rougetwo_list.append(rouge4other.rouge_2(summary=snt, references=reference_list[index]))
-        rougel_list.append(rouge4one.rouge_l(summary=snt, references=reference_list[index]))
+        rougeone_list.append(rouge4one.rouge_1(summary=snt, references=reference_list[index], alpha=args.alpha))
+        rougetwo_list.append(rouge4other.rouge_2(summary=snt, references=reference_list[index], alpha=args.alpha))
+        rougel_list.append(rouge4one.rouge_l(summary=snt, references=reference_list[index], alpha=args.alpha))
     print('ROUGE-1\t%.6f'%(np.average(rougeone_list)))
     print('ROUGE-2\t%.6f'%(np.average(rougetwo_list)))
     print('ROUGE-L\t%.6f'%(np.average(rougel_list)))
@@ -45,6 +45,7 @@ if __name__ == "__main__":
     parser.add_argument('-r', '--reference', dest='reference',
                         required=True, help='specify the reference file name')
     parser.add_argument('-l', '--lang', default='ja')
+    parser.add_argument('--alpha', type=float, default=0.5)
     parser.add_argument('--remove-bpe', default=None)
     args = parser.parse_args()
     main(args)

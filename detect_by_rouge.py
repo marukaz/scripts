@@ -44,7 +44,7 @@ def main(args):
                 sys_source = fss.readline()
             lr = process_bpe_symbol(lr, args.remove_bpe)
             ls = process_bpe_symbol(ls, args.remove_bpe)
-            score = rouge(summary=ls, references=lr)
+            score = rouge(summary=ls, references=lr, alpha=args.alpha)
             if args.filter_mode:
                 if score > args.threshold:
                     ref_fo.write(lr)
@@ -83,6 +83,7 @@ if __name__ == "__main__":
     parser.add_argument('--remove-bpe', default=None)
     parser.add_argument('-f', '--filter-mode', action='store_true')
     parser.add_argument('--ignore-empty', action='store_true')
+    parser.add_argument('--alpha', type=float, default=0.5)
     args = parser.parse_args()
     main(args)
 
