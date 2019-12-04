@@ -37,4 +37,4 @@ shift $((OPTIND - 1))
 
 fairseq-preprocess --source-lang $SRC --target-lang $TGT \
 --trainpref $DATA/$TRAIN --validpref $DATA/$VALID --testpref $DATA/$TEST \
---destdir ${DATA}_bin --workers 8
+--destdir ${DATA}_bin --workers 64
