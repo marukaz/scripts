@@ -40,7 +40,7 @@ if __name__ == "__main__":
     parser.add_argument('filepath')
     parser.add_argument('--seed', type=int, default=516)
     parser.add_argument('--example-num', type=int, default=10000)
-    parser.add_argument('--sample-num', type=int, default=100)
+    parser.add_argument('--sample-num', type=int, default=110)
     parser.add_argument('--remove-bpe', default=None)
     args = parser.parse_args()
     main(args)
