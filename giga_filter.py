@@ -20,49 +20,51 @@ def get_words(parse):
             for w in parse.split()
             if w[-1] == ')']
 
-for l in open(sys.argv[1]):
-    splits = l.strip().split("\t")
-    if len(splits) != 4:
-        continue
-    title_parse, article_parse, title, article = splits
-    title_words = title.split()
-    article_words = article.split()
+with open(sys.argv[1]) as f:
+    print(f.readline().strip())
+    for l in f:
+        splits = l.strip().split("\t")
+        # giga_final.tsv style
+        title = splits[1].strip('"').lower()
+        article = splits[3].strip('"').lower()
+        title_words = title.split()
+        article_words = article.split()
 
-    # No blanks.
-    if any((word == "" for word in title_words)):
-        continue
+        # No blanks.
+        if any((word == "" for word in title_words)):
+            continue
 
-    if any((word == "" for word in article_words)):
-        continue
+        if any((word == "" for word in article_words)):
+            continue
 
-    if not any((word == "." for word in article_words)):
-        continue
+        if not any((word == "." for word in article_words)):
+            continue
 
-    # Spurious words to blacklist.
-    # First set is words that never appear in input and output
-    # Second set is punctuation and non-title words.
-    bad_words = ['update#', 'update', 'recasts', 'undated', 'grafs', 'corrects',
-                 'retransmitting', 'updates', 'dateline', 'writethru',
-                 'recaps', 'inserts', 'incorporates', 'adv##',
-                 'ld-writethru', 'djlfx', 'edits', 'byline',
-                 'repetition', 'background', 'thruout', 'quotes',
-                 'attention', 'ny###', 'overline', 'embargoed', 'ap', 'gmt',
-                 'adds', 'embargo',
-                 'urgent', '?', ' i ', ' : ', ' - ', ' by ', '-lrb-', '-rrb-']
-    if any((bad in title.lower()
-            for bad in bad_words)):
-        continue
+        # Spurious words to blacklist.
+        # First set is words that never appear in input and output
+        # Second set is punctuation and non-title words.
+        bad_words = ['update#', 'update', 'recasts', 'undated', 'grafs', 'corrects',
+                    'retransmitting', 'updates', 'dateline', 'writethru',
+                    'recaps', 'inserts', 'incorporates', 'adv##',
+                    'ld-writethru', 'djlfx', 'edits', 'byline',
+                    'repetition', 'background', 'thruout', 'quotes',
+                    'attention', 'ny###', 'overline', 'embargoed', 'ap', 'gmt',
+                    'adds', 'embargo',
+                    'urgent', '?', ' i ', ' : ', ' - ', ' by ', '-lrb-', '-rrb-']
+        if any((bad in title.lower()
+                for bad in bad_words)):
+            continue
 
-    # Reasonable lengths
-    if not (10 < len(article_words) < 100 and
-            3 < len(title_words) < 50):
-        continue
+        # Reasonable lengths
+        if not (10 < len(article_words) < 100 and
+                3 < len(title_words) < 50):
+            continue
 
-    # Some word match.
-    matches = len(set([w.lower() for w in title_words if len(w) > 3]) &
-                  set([w.lower() for w in article_words if len(w) > 3]))
-    if matches < 1:
-        continue
+        # Some word match.
+        matches = len(set([w.lower() for w in title_words if len(w) > 3]) &
+                    set([w.lower() for w in article_words if len(w) > 3]))
+        if matches < 1:
+            continue
 
-    # Okay, print.
-    print(l.strip())
+        # Okay, print.
+        print(l.strip())
