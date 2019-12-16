@@ -18,7 +18,11 @@ def main(args):
     save_hypo_path = path.parent/f'{path.name}.hypo.sample{args.sample_num}'
     save_src_path = path.parent/f'{path.name}.src.sample{args.sample_num}'
     save_ids_path = path.parent/f'{path.name}.ids.sample{args.sample_num}'
-    sample_ids = random.sample(range(args.example_num), k=args.sample_num)
+    if args.id_file is not None:
+        with open(args.od_file) as f:
+            sample_ids = [int(id_) for id_ in f]
+    else:
+        sample_ids = random.sample(range(args.example_num), k=args.sample_num)
     with save_ids_path.open('w') as f:
         for id_ in sample_ids:
             print(id_, file=f)
@@ -40,7 +44,8 @@ if __name__ == "__main__":
     parser.add_argument('filepath')
     parser.add_argument('--seed', type=int, default=516)
     parser.add_argument('--example-num', type=int, default=10000)
-    parser.add_argument('--sample-num', type=int, default=110)
+    parser.add_argument('--sample-num', type=int, default=100)
+    parser.add_argument('--id-file', default=None)
     parser.add_argument('--remove-bpe', default=None)
     args = parser.parse_args()
     main(args)
