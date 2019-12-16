@@ -11,11 +11,11 @@ usage_exit() {
         echo "Usage: [-p path to raw text dir] [-d destination dir]\
          [-s extension for source lang, defalut: $SRC] [-t extension for target lang, default: $TGT]\
          [-r train prefix, defalut: $TRAIN] [-v valid prefix, default: $VALID] [-e test prefix, default: $TEST]\
-         [-w num of workers default: $WORKER]" 1>&2
+         [-w num of workers default: $WORKER] [-j joined_dictionary flag]" 1>&2
         exit 1
 }
 
-while getopts p:d:s:t:r:v:e:w:h OPT
+while getopts p:d:s:t:r:v:e:w:jh OPT
 do
     case $OPT in
         p)  PATH_DIR=$OPTARG
@@ -34,6 +34,8 @@ do
             ;;
         w)  WORKER=$OPTARG
             ;;
+        j)  FLAG_J=1
+            ;;
         h)  usage_exit
             ;;
         \?) usage_exit
@@ -44,9 +46,15 @@ done
 shift $((OPTIND - 1))
 
 if [ -z "$DEST_DIR" ]; then
-　　DEST_DIR=${PATH_DIR}_bin
+DEST_DIR=${PATH_DIR}_bin
 fi
 
+if [ -n "$FLAG_J" ]; then
+fairseq-preprocess --source-lang $SRC --target-lang $TGT \
+--trainpref $PATH_DIR/$TRAIN --validpref $PATH_DIR/$VALID --testpref $PATH_DIR/$TEST \
+--destdir $DEST_DIR --workers $WORKER --joined-dictionary
+else
 fairseq-preprocess --source-lang $SRC --target-lang $TGT \
 --trainpref $PATH_DIR/$TRAIN --validpref $PATH_DIR/$VALID --testpref $PATH_DIR/$TEST \
 --destdir $DEST_DIR --workers $WORKER
+fi
